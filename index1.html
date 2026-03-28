@@ -1,0 +1,2653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> - Child Safety SystemGuardian Circle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --success-color: #10b981;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --text-color: #334155;
+            --border-radius: 16px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--box-shadow);
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo i {
+            margin-right: 12px;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Main Dashboard */
+        .dashboard {
+            padding: 2rem 0;
+            padding-bottom: 100px; /* Space for floating buttons */
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(16, 185, 129, 0.2);
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(10px);
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.warning {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .status-indicator.danger {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.3);
+            animation: dangerPulse 1s infinite;
+        }
+
+        @keyframes dangerPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+        }
+
+        /* Floating Action Buttons */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        .fab {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            color: white;
+            font-size: 1.5rem;
+            position: relative;
+        }
+
+        .fab-quick {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            animation: quickPulse 1.5s infinite;
+            width: 70px;
+            height: 70px;
+            font-size: 1.8rem;
+        }
+
+        @keyframes quickPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+                transform: scale(1.05);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+                transform: scale(1);
+            }
+        }
+
+        .fab-sos {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            animation: sosPulse 2s infinite;
+        }
+
+        @keyframes sosPulse {
+            0% {
+                box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 40px rgba(239, 68, 68, 0.6);
+            }
+            100% {
+                box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+            }
+        }
+
+        .fab-prevention {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            animation: preventionPulse 3s infinite;
+        }
+
+        @keyframes preventionPulse {
+            0% {
+                box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 40px rgba(245, 158, 11, 0.6);
+            }
+            100% {
+                box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+            }
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        .fab:active {
+            transform: scale(0.95);
+        }
+
+        .fab-label {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-right: 15px;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition);
+            pointer-events: none;
+        }
+
+        .fab-container:hover .fab-label {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .alert-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 2px solid white;
+            animation: pulse 2s infinite;
+        }
+
+        /* Alert Confirmation */
+        .alert-confirmation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            z-index: 3000;
+            text-align: center;
+            display: none;
+            animation: alertPop 0.3s ease;
+        }
+
+        .alert-confirmation.active {
+            display: block;
+        }
+
+        @keyframes alertPop {
+            from {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .alert-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .alert-icon.sos {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .alert-icon.sos i {
+            color: var(--danger-color);
+        }
+
+        .alert-icon.prevention {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .alert-icon.prevention i {
+            color: var(--warning-color);
+        }
+
+        .alert-icon i {
+            font-size: 3rem;
+        }
+
+        .alert-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-message {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-timer {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .alert-timer-bar {
+            height: 100%;
+            background: var(--danger-color);
+            width: 100%;
+            animation: timerCountdown 3s linear forwards;
+        }
+
+        .alert-timer-bar.prevention {
+            background: var(--warning-color);
+            animation: timerCountdown 3s linear forwards;
+        }
+
+        @keyframes timerCountdown {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        .alert-cancel {
+            background: transparent;
+            border: 1px solid #e5e7eb;
+            color: var(--text-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .alert-cancel:hover {
+            background: #f3f4f6;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            color: white;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1500;
+            animation: slideDown 0.5s ease;
+        }
+
+        .status-bar.active {
+            display: flex;
+        }
+
+        .status-bar.sos {
+            background: var(--danger-color);
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .status-bar.prevention {
+            background: var(--warning-color);
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .status-bar.quick {
+            background: var(--danger-color);
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .status-bar i {
+            font-size: 1.5rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1500;
+            animation: slideDown 0.5s ease;
+        }
+
+        .alert-banner.active {
+            display: flex;
+        }
+
+        .alert-banner.warning {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+        }
+
+        .alert-banner.danger {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+
+        .alert-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert-content i {
+            font-size: 1.8rem;
+            animation: pulse 2s infinite;
+        }
+
+        .alert-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .alert-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .alert-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .alert-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .alert-btn.primary {
+            background: white;
+            color: var(--warning-color);
+        }
+
+        .alert-banner.danger .alert-btn.primary {
+            color: var(--danger-color);
+        }
+
+        .alert-btn.primary:hover {
+            background: #f0f0f0;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Map Section */
+        .map-section {
+            height: 500px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .map-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .map-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: #e0e6ed;
+            overflow: hidden;
+        }
+
+        /* Google Maps Style Background */
+        .map-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #e8eaed;
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Map Roads */
+        .map-roads {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .road {
+            position: absolute;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .road-horizontal {
+            height: 12px;
+            width: 100%;
+            top: 30%;
+        }
+
+        .road-vertical {
+            width: 12px;
+            height: 100%;
+            left: 40%;
+        }
+
+        .road-diagonal {
+            height: 12px;
+            width: 141.4%;
+            top: 60%;
+            left: -20%;
+            transform: rotate(45deg);
+            transform-origin: center;
+        }
+
+        .road::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: repeating-linear-gradient(
+                90deg,
+                #ffd700,
+                #ffd700 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            transform: translateY(-50%);
+        }
+
+        .road-horizontal::before {
+            background: repeating-linear-gradient(
+                90deg,
+                #ffd700,
+                #ffd700 10px,
+                transparent 10px,
+                transparent 20px
+            );
+        }
+
+        .road-vertical::before {
+            background: repeating-linear-gradient(
+                0deg,
+                #ffd700,
+                #ffd700 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Buildings */
+        .building {
+            position: absolute;
+            background: #d1d5db;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .building-1 {
+            width: 60px;
+            height: 80px;
+            top: 15%;
+            left: 25%;
+        }
+
+        .building-2 {
+            width: 80px;
+            height: 60px;
+            top: 40%;
+            left: 65%;
+        }
+
+        .building-3 {
+            width: 70px;
+            height: 90px;
+            top: 70%;
+            left: 30%;
+        }
+
+        .building-4 {
+            width: 50px;
+            height: 70px;
+            top: 20%;
+            left: 70%;
+        }
+
+        /* Parks */
+        .park {
+            position: absolute;
+            background: #a8e6cf;
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+
+        .park-1 {
+            width: 100px;
+            height: 100px;
+            top: 50%;
+            left: 20%;
+        }
+
+        .park-2 {
+            width: 80px;
+            height: 80px;
+            top: 25%;
+            left: 50%;
+        }
+
+        /* Zones */
+        .safe-zone {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .safe-zone-home {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, rgba(16, 185, 129, 0) 70%);
+            top: 20%;
+            left: 20%;
+            animation: safeZonePulse 4s infinite;
+        }
+
+        .safe-zone-school {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, rgba(99, 102, 241, 0) 70%);
+            top: 60%;
+            left: 70%;
+            animation: safeZonePulse 4s infinite 1s;
+        }
+
+        .danger-zone {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, rgba(239, 68, 68, 0) 70%);
+            top: 40%;
+            left: 60%;
+            border-radius: 50%;
+            animation: dangerZonePulse 3s infinite;
+            z-index: 5;
+        }
+
+        .suspicious-zone {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, rgba(245, 158, 11, 0) 70%);
+            top: 30%;
+            left: 50%;
+            border-radius: 50%;
+            animation: suspiciousZonePulse 2.5s infinite;
+            z-index: 5;
+        }
+
+        @keyframes safeZonePulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes dangerZonePulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes suspiciousZonePulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        /* Child Marker */
+        .child-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transform: translate(-50%, -50%);
+            animation: pulse 2s infinite;
+            z-index: 10;
+            transition: all 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .child-marker i {
+            font-size: 1.2rem;
+        }
+
+        .child-marker.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            animation: blink 1s infinite, shake 0.5s infinite;
+        }
+
+        .child-marker.suspicious {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            animation: suspiciousPulse 1.5s infinite;
+        }
+
+        @keyframes suspiciousPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            25% {
+                transform: translate(-48%, -50%) rotate(-5deg);
+            }
+            75% {
+                transform: translate(-52%, -50%) rotate(5deg);
+            }
+        }
+
+        /* Movement Trail */
+        .movement-trail {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: fadeOut 3s forwards;
+            z-index: 5;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 0.7;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+        }
+
+        /* Child Info Popup */
+        .child-info-popup {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 280px;
+            z-index: 20;
+            animation: slideUp 0.5s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .child-info-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.8rem;
+        }
+
+        .child-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .child-name {
+            font-weight: 700;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+
+        .child-location {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .child-location i {
+            color: var(--primary-color);
+        }
+
+        .child-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.warning {
+            background: var(--warning-color);
+        }
+
+        .status-dot.danger {
+            background: var(--danger-color);
+            animation: dangerPulse 1s infinite;
+        }
+
+        /* Activity Feed */
+        .activity-section {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .activity-header {
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .activity-list {
+            flex: 1;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+
+        .activity-item {
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            animation: fadeIn 0.5s ease;
+            transition: var(--transition);
+        }
+
+        .activity-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item.suspicious-activity {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 3px solid var(--warning-color);
+        }
+
+        .activity-item.danger-alert {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid var(--danger-color);
+        }
+
+        .activity-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+
+        .activity-icon.safe {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+
+        .activity-icon.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning-color);
+        }
+
+        .activity-icon.danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: white;
+        }
+
+        .activity-time {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Emergency Contacts */
+        .emergency-contacts {
+            margin-top: 2rem;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .contacts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .contacts-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .add-contact-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-contact-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .contact-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .contact-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .contact-relation {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .contact-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success-color);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+        }
+
+        .contact-status.offline {
+            background: #64748b;
+            box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.3);
+        }
+
+        .contact-details {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .contact-detail i {
+            width: 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .contact-action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .contact-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Analytics Section */
+        .analytics-section {
+            margin-top: 2rem;
+            animation: fadeInUp 0.8s ease 0.8s both;
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .analytics-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .timeframe-selector {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .timeframe-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .timeframe-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .analytics-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .analytics-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .analytics-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .analytics-icon i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .analytics-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .analytics-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Settings Section */
+        .settings-section {
+            margin-top: 2rem;
+            animation: fadeInUp 0.8s ease 1s both;
+        }
+
+        .settings-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .setting-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .setting-label i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .toggle-slider {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+            }
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            right: 20px;
+            top: 80px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-control-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .map-control-btn:hover {
+            background: white;
+            transform: scale(1.05);
+        }
+
+        .map-control-btn i {
+            color: var(--dark-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contacts-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--box-shadow);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .dashboard-title {
+                font-size: 1.8rem;
+            }
+
+            .map-section, .activity-section {
+                height: 350px;
+            }
+
+            .fab-container {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .fab {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .fab-quick {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .fab-label {
+                display: none;
+            }
+
+            .alert-confirmation {
+                width: 90%;
+                padding: 1.5rem;
+            }
+
+            .analytics-grid, .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Custom Scrollbar */
+        .activity-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .activity-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .activity-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .activity-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                Guardian Circle
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#contacts">Contacts</a></li>
+                <li><a href="#analytics">Analytics</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Alert Banner -->
+    <div class="alert-banner warning" id="alertBanner">
+        <div class="alert-content">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="alert-text">
+                <div class="alert-title">Unusual Activity Detected</div>
+                <div class="alert-description">Your child is approaching a suspicious area with recent reports</div>
+            </div>
+        </div>
+        <div class="alert-actions">
+            <button class="alert-btn" id="dismissBanner">Dismiss</button>
+            <button class="alert-btn primary" id="takeAction">Take Action</button>
+        </div>
+    </div>
+
+    <!-- SOS Status Bar -->
+    <div class="status-bar sos" id="sosStatusBar">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="sosStatusText">SOS Alert Activated - Notifying emergency contacts...</span>
+    </div>
+
+    <!-- Prevention Status Bar -->
+    <div class="status-bar prevention" id="preventionStatusBar">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="preventionStatusText">Prevention Alert Sent - Notifying parents and authorities...</span>
+    </div>
+
+    <!-- Quick Alert Status Bar -->
+    <div class="status-bar quick" id="quickStatusBar">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="quickStatusText">Emergency Alert Sent - Help is on the way!</span>
+    </div>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard container" id="dashboard">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Child Safety System</h1>
+            <div class="status-indicator" id="statusIndicator">
+                <i class="fas fa-check-circle"></i>
+                <span>All Safe</span>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Map Section -->
+            <section class="map-section glass-card">
+                <div class="map-header">
+                    <span>Real-Time Location</span>
+                    <span id="lastUpdate">Last updated: 2 mins ago</span>
+                </div>
+                <div class="map-container" id="mapContainer">
+                    <!-- Google Maps Style Background -->
+                    <div class="map-background"></div>
+                    
+                    <!-- Map Roads -->
+                    <div class="map-roads">
+                        <div class="road road-horizontal"></div>
+                        <div class="road road-vertical"></div>
+                        <div class="road road-diagonal"></div>
+                    </div>
+                    
+                    <!-- Buildings -->
+                    <div class="building building-1"></div>
+                    <div class="building building-2"></div>
+                    <div class="building building-3"></div>
+                    <div class="building building-4"></div>
+                    
+                    <!-- Parks -->
+                    <div class="park park-1"></div>
+                    <div class="park park-2"></div>
+                    
+                    <!-- Safe Zones -->
+                    <div class="safe-zone safe-zone-home"></div>
+                    <div class="safe-zone safe-zone-school"></div>
+                    
+                    <!-- Danger Zone -->
+                    <div class="danger-zone"></div>
+                    
+                    <!-- Suspicious Activity Zone -->
+                    <div class="suspicious-zone"></div>
+                    
+                    <!-- Child Marker -->
+                    <div class="child-marker" id="childMarker" style="top: 60%; left: 40%;">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    
+                    <!-- Child Info Popup -->
+                    <div class="child-info-popup">
+                        <div class="child-info-header">
+                            <img src="https://picsum.photos/seed/child/50/50.jpg" alt="Child" class="child-avatar">
+                            <span class="child-name">Rahul Sharma</span>
+                        </div>
+                        <div class="child-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>City Park, Sector 15</span>
+                        </div>
+                        <div class="child-status">
+                            <div class="status-dot" id="statusDot"></div>
+                            <span id="statusText">Safe Zone</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Map Controls -->
+                    <div class="map-controls">
+                        <button class="map-control-btn" id="zoomIn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="map-control-btn" id="zoomOut">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button class="map-control-btn" id="centerMap">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activity Feed -->
+            <section class="activity-section glass-card">
+                <div class="activity-header">Recent Activity</div>
+                <div class="activity-list" id="activityList">
+                    <div class="activity-item">
+                        <div class="activity-icon safe">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Entered Safe Zone</div>
+                            <div class="activity-time">2 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon safe">
+                            <i class="fas fa-walking"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Normal Movement Detected</div>
+                            <div class="activity-time">15 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item suspicious-activity">
+                        <div class="activity-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Suspicious Activity Detected</div>
+                            <div class="activity-time">1 hour ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon safe">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Left Home</div>
+                            <div class="activity-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon safe">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">School Day Ended</div>
+                            <div class="activity-time">3 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Emergency Contacts Section -->
+        <section class="emergency-contacts glass-card" id="contacts">
+            <div class="contacts-header">
+                <h2 class="contacts-title">Emergency Contacts</h2>
+                <button class="add-contact-btn" id="addContactBtn">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Contact</span>
+                </button>
+            </div>
+            <div class="contacts-grid">
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <div class="contact-avatar">M</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Mom</div>
+                            <div class="contact-relation">Primary Guardian</div>
+                        </div>
+                        <div class="contact-status"></div>
+                    </div>
+                    <div class="contact-details">
+                        <div class="contact-detail">
+                            <i class="fas fa-phone"></i>
+                            <span>+91 98765 43210</span>
+                        </div>
+                        <div class="contact-detail">
+                            <i class="fas fa-envelope"></i>
+                            <span>mom@example.com</span>
+                        </div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="contact-action-btn">
+                            <i class="fas fa-phone"></i> Call
+                        </button>
+                        <button class="contact-action-btn">
+                            <i class="fas fa-comment"></i> Message
+                        </button>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <div class="contact-avatar">D</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Dad</div>
+                            <div class="contact-relation">Primary Guardian</div>
+                        </div>
+                        <div class="contact-status"></div>
+                    </div>
+                    <div class="contact-details">
+                        <div class="contact-detail">
+                            <i class="fas fa-phone"></i>
+                            <span>+91 98765 43211</span>
+                        </div>
+                        <div class="contact-detail">
+                            <i class="fas fa-envelope"></i>
+                            <span>dad@example.com</span>
+                        </div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="contact-action-btn">
+                            <i class="fas fa-phone"></i> Call
+                        </button>
+                        <button class="contact-action-btn">
+                            <i class="fas fa-comment"></i> Message
+                        </button>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <div class="contact-avatar">U</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Uncle</div>
+                            <div class="contact-relation">Emergency Contact</div>
+                        </div>
+                        <div class="contact-status offline"></div>
+                    </div>
+                    <div class="contact-details">
+                        <div class="contact-detail">
+                            <i class="fas fa-phone"></i>
+                            <span>+91 98765 43212</span>
+                        </div>
+                        <div class="contact-detail">
+                            <i class="fas fa-envelope"></i>
+                            <span>uncle@example.com</span>
+                        </div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="contact-action-btn">
+                            <i class="fas fa-phone"></i> Call
+                        </button>
+                        <button class="contact-action-btn">
+                            <i class="fas fa-comment"></i> Message
+                        </button>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <div class="contact-avatar">P</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Police</div>
+                            <div class="contact-relation">Emergency Service</div>
+                        </div>
+                        <div class="contact-status"></div>
+                    </div>
+                    <div class="contact-details">
+                        <div class="contact-detail">
+                            <i class="fas fa-phone"></i>
+                            <span>100</span>
+                        </div>
+                        <div class="contact-detail">
+                            <i class="fas fa-globe"></i>
+                            <span>emergency.gov.in</span>
+                        </div>
+                    </div>
+                    <div class="contact-actions">
+                        <button class="contact-action-btn">
+                            <i class="fas fa-phone"></i> Call
+                        </button>
+                        <button class="contact-action-btn">
+                            <i class="fas fa-info-circle"></i> Info
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="analytics-section glass-card" id="analytics">
+            <div class="analytics-header">
+                <h2 class="analytics-title">Safety Analytics</h2>
+                <div class="timeframe-selector">
+                    <button class="timeframe-btn">Day</button>
+                    <button class="timeframe-btn active">Week</button>
+                    <button class="timeframe-btn">Month</button>
+                </div>
+            </div>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="analytics-value">12</div>
+                    <div class="analytics-label">Threats Prevented</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="analytics-value">28</div>
+                    <div class="analytics-label">Alerts Sent</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="analytics-value">5</div>
+                    <div class="analytics-label">Authorities Notified</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="analytics-value">94%</div>
+                    <div class="analytics-label">Detection Accuracy</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section class="settings-section glass-card" id="settings">
+            <h2 class="settings-title">Detection Settings</h2>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Location Tracking</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked id="locationToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-running"></i>
+                        <span>Movement Detection</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked id="movementToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Suspicious Activity Detection</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked id="suspiciousToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-bell"></i>
+                        <span>Auto-Alert Authorities</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked id="authorityToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Action Buttons -->
+    <div class="fab-container">
+        <div class="fab-label" id="quickLabel">Quick Emergency</div>
+        <button class="fab fab-quick" id="quickAlertButton">
+            <i class="fas fa-exclamation"></i>
+        </button>
+        <div class="fab-label" id="sosLabel">Emergency SOS</div>
+        <button class="fab fab-sos" id="sosButton">
+            <i class="fas fa-exclamation"></i>
+        </button>
+        <div class="fab-label" id="preventionLabel">Prevention Alert</div>
+        <button class="fab fab-prevention" id="preventionButton">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="alert-badge" id="alertBadge">3</div>
+        </button>
+    </div>
+
+    <!-- Quick Alert Confirmation -->
+    <div class="alert-confirmation" id="quickAlertConfirmation">
+        <div class="alert-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h2 class="alert-title">Emergency Alert</h2>
+        <p class="alert-message">Sending emergency alert with your current location to all emergency contacts...</p>
+        <div class="alert-timer">
+            <div class="alert-timer-bar"></div>
+        </div>
+        <button class="alert-cancel" id="cancelQuickAlert">Cancel</button>
+    </div>
+
+    <!-- SOS Confirmation -->
+    <div class="alert-confirmation sos" id="sosConfirmation">
+        <div class="alert-icon sos">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h2 class="alert-title">SOS Alert</h2>
+        <p class="alert-message">Sending SOS alert with your current location to all emergency contacts and authorities...</p>
+        <div class="alert-timer">
+            <div class="alert-timer-bar"></div>
+        </div>
+        <button class="alert-cancel" id="cancelSos">Cancel</button>
+    </div>
+
+    <!-- Prevention Confirmation -->
+    <div class="alert-confirmation prevention" id="preventionConfirmation">
+        <div class="alert-icon prevention">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h2 class="alert-title">Prevention Alert</h2>
+        <p class="alert-message">Sending prevention alert with your current location to parents and authorities...</p>
+        <div class="alert-timer">
+            <div class="alert-timer-bar prevention"></div>
+        </div>
+        <button class="alert-cancel" id="cancelPrevention">Cancel</button>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Get map elements
+        const childMarker = document.getElementById('childMarker');
+        const mapContainer = document.getElementById('mapContainer');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const lastUpdate = document.getElementById('lastUpdate');
+        const alertBanner = document.getElementById('alertBanner');
+        
+        // Map controls
+        const zoomIn = document.getElementById('zoomIn');
+        const zoomOut = document.getElementById('zoomOut');
+        const centerMap = document.getElementById('centerMap');
+        let currentZoom = 1;
+        
+        zoomIn.addEventListener('click', () => {
+            if (currentZoom < 2) {
+                currentZoom += 0.2;
+                mapContainer.style.transform = `scale(${currentZoom})`;
+            }
+        });
+        
+        zoomOut.addEventListener('click', () => {
+            if (currentZoom > 0.8) {
+                currentZoom -= 0.2;
+                mapContainer.style.transform = `scale(${currentZoom})`;
+            }
+        });
+        
+        centerMap.addEventListener('click', () => {
+            currentZoom = 1;
+            mapContainer.style.transform = `scale(${currentZoom})`;
+        });
+        
+        // Previous position for trail
+        let previousPosition = { top: 60, left: 40 };
+        
+        // Create movement trail
+        function createTrail(top, left) {
+            const trail = document.createElement('div');
+            trail.className = 'movement-trail';
+            trail.style.top = `${top}%`;
+            trail.style.left = `${left}%`;
+            mapContainer.appendChild(trail);
+            
+            // Remove trail after animation completes
+            setTimeout(() => {
+                trail.remove();
+            }, 3000);
+        }
+        
+        // Simulate child movement on map
+        function simulateLocationUpdate() {
+            const randomTop = Math.floor(Math.random() * 80) + 10;
+            const randomLeft = Math.floor(Math.random() * 80) + 10;
+            
+            // Create trail from previous position
+            createTrail(previousPosition.top, previousPosition.left);
+            
+            // Update marker position with smooth transition
+            childMarker.style.top = `${randomTop}%`;
+            childMarker.style.left = `${randomLeft}%`;
+            
+            // Update previous position
+            previousPosition = { top: randomTop, left: randomLeft };
+            
+            // Update time
+            const now = new Date();
+            lastUpdate.textContent = `Last updated: ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            // Check if in danger zone
+            const dangerZone = document.querySelector('.danger-zone');
+            const dangerRect = dangerZone.getBoundingClientRect();
+            const mapRect = mapContainer.getBoundingClientRect();
+            const markerRect = childMarker.getBoundingClientRect();
+            
+            const inDangerZone = (
+                markerRect.left >= dangerRect.left - 20 &&
+                markerRect.right <= dangerRect.right + 20 &&
+                markerRect.top >= dangerRect.top - 20 &&
+                markerRect.bottom <= dangerRect.bottom + 20
+            );
+            
+            // Check if in suspicious zone
+            const suspiciousZone = document.querySelector('.suspicious-zone');
+            const suspiciousRect = suspiciousZone.getBoundingClientRect();
+            
+            const inSuspiciousZone = (
+                markerRect.left >= suspiciousRect.left - 20 &&
+                markerRect.right <= suspiciousRect.right + 20 &&
+                markerRect.top >= suspiciousRect.top - 20 &&
+                markerRect.bottom <= suspiciousRect.bottom + 20
+            );
+            
+            // Check if in safe zone
+            const safeZones = document.querySelectorAll('.safe-zone');
+            let inSafeZone = false;
+            
+            safeZones.forEach(zone => {
+                const zoneRect = zone.getBoundingClientRect();
+                if (
+                    markerRect.left >= zoneRect.left - 20 &&
+                    markerRect.right <= zoneRect.right + 20 &&
+                    markerRect.top >= zoneRect.top - 20 &&
+                    markerRect.bottom <= zoneRect.bottom + 20
+                ) {
+                    inSafeZone = true;
+                }
+            });
+            
+            // Update status based on position
+            if (inDangerZone) {
+                statusIndicator.className = 'status-indicator danger';
+                statusIndicator.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>Alert</span>';
+                statusDot.className = 'status-dot danger';
+                statusText.textContent = 'Danger Zone';
+                childMarker.className = 'child-marker danger';
+                alertBanner.className = 'alert-banner danger active';
+                alertBanner.querySelector('.alert-title').textContent = 'Danger: High-Risk Area Detected';
+                alertBanner.querySelector('.alert-description').textContent = 'Your child has entered a high-risk area. Immediate action recommended.';
+            } else if (inSuspiciousZone) {
+                statusIndicator.className = 'status-indicator warning';
+                statusIndicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Warning</span>';
+                statusDot.className = 'status-dot warning';
+                statusText.textContent = 'Suspicious Area';
+                childMarker.className = 'child-marker suspicious';
+                alertBanner.className = 'alert-banner warning active';
+                alertBanner.querySelector('.alert-title').textContent = 'Warning: Suspicious Activity Area';
+                alertBanner.querySelector('.alert-description').textContent = 'Your child has entered an area with recent suspicious activities.';
+            } else if (!inSafeZone) {
+                statusIndicator.className = 'status-indicator warning';
+                statusIndicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Caution</span>';
+                statusDot.className = 'status-dot warning';
+                statusText.textContent = 'Unknown Area';
+                childMarker.className = 'child-marker';
+                alertBanner.className = 'alert-banner warning active';
+                alertBanner.querySelector('.alert-title').textContent = 'Warning: Unusual Activity Detected';
+                alertBanner.querySelector('.alert-description').textContent = 'Your child has entered an area with recent safety concerns.';
+            } else {
+                statusIndicator.className = 'status-indicator';
+                statusIndicator.innerHTML = '<i class="fas fa-check-circle"></i><span>All Safe</span>';
+                statusDot.className = 'status-dot';
+                statusText.textContent = 'Safe Zone';
+                childMarker.className = 'child-marker';
+                alertBanner.classList.remove('active');
+            }
+        }
+        
+        // Update location every 3 seconds for demonstration
+        setInterval(simulateLocationUpdate, 3000);
+        
+        // Quick Alert Button Functionality
+        const quickAlertButton = document.getElementById('quickAlertButton');
+        const quickAlertConfirmation = document.getElementById('quickAlertConfirmation');
+        const quickStatusBar = document.getElementById('quickStatusBar');
+        const quickStatusText = document.getElementById('quickStatusText');
+        const cancelQuickAlert = document.getElementById('cancelQuickAlert');
+        let quickAlertTimeout;
+        
+        // Quick Alert Button Click
+        quickAlertButton.addEventListener('click', () => {
+            // Show confirmation dialog
+            quickAlertConfirmation.classList.add('active');
+            
+            // Start countdown timer
+            quickAlertTimeout = setTimeout(() => {
+                // Send alert automatically after 3 seconds
+                sendQuickAlert();
+                quickAlertConfirmation.classList.remove('active');
+            }, 3000);
+        });
+        
+        // Cancel Quick Alert
+        cancelQuickAlert.addEventListener('click', () => {
+            clearTimeout(quickAlertTimeout);
+            quickAlertConfirmation.classList.remove('active');
+        });
+        
+        // Send Quick Alert Function
+        function sendQuickAlert() {
+            // Show quick status bar
+            quickStatusBar.classList.add('active');
+            quickStatusText.textContent = 'Emergency Alert Sent - Help is on the way!';
+            
+            // Add quick alert activity to feed
+            addQuickAlertActivity();
+            
+            // Hide status bar after 8 seconds
+            setTimeout(() => {
+                quickStatusBar.classList.remove('active');
+            }, 8000);
+        }
+        
+        // SOS Button Functionality
+        const sosButton = document.getElementById('sosButton');
+        const sosConfirmation = document.getElementById('sosConfirmation');
+        const sosStatusBar = document.getElementById('sosStatusBar');
+        const sosStatusText = document.getElementById('sosStatusText');
+        const cancelSos = document.getElementById('cancelSos');
+        let sosTimeout;
+        
+        // SOS Button Click
+        sosButton.addEventListener('click', () => {
+            // Show confirmation dialog
+            sosConfirmation.classList.add('active');
+            
+            // Start countdown timer
+            sosTimeout = setTimeout(() => {
+                // Send alert automatically after 3 seconds
+                sendSOSAlert();
+                sosConfirmation.classList.remove('active');
+            }, 3000);
+        });
+        
+        // Cancel SOS
+        cancelSos.addEventListener('click', () => {
+            clearTimeout(sosTimeout);
+            sosConfirmation.classList.remove('active');
+        });
+        
+        // Send SOS Alert Function
+        function sendSOSAlert() {
+            // Show SOS status bar
+            sosStatusBar.classList.add('active');
+            sosStatusText.textContent = 'SOS Alert Activated - Notifying emergency contacts and authorities...';
+            
+            // Add SOS activity to feed
+            addSOSActivity();
+            
+            // Simulate sending to contacts
+            setTimeout(() => {
+                sosStatusText.textContent = 'Emergency contacts notified - Location shared';
+            }, 2000);
+            
+            setTimeout(() => {
+                sosStatusText.textContent = 'Authorities alerted - Help is on the way';
+            }, 4000);
+            
+            // Hide status bar after 8 seconds
+            setTimeout(() => {
+                sosStatusBar.classList.remove('active');
+            }, 8000);
+        }
+        
+        // Prevention Button Functionality
+        const preventionButton = document.getElementById('preventionButton');
+        const preventionConfirmation = document.getElementById('preventionConfirmation');
+        const preventionStatusBar = document.getElementById('preventionStatusBar');
+        const preventionStatusText = document.getElementById('preventionStatusText');
+        const cancelPrevention = document.getElementById('cancelPrevention');
+        const alertBadge = document.getElementById('alertBadge');
+        let preventionTimeout;
+        let alertCount = 3;
+        
+        // Prevention Button Click
+        preventionButton.addEventListener('click', () => {
+            // Show confirmation dialog
+            preventionConfirmation.classList.add('active');
+            
+            // Start countdown timer
+            preventionTimeout = setTimeout(() => {
+                // Send alert automatically after 3 seconds
+                sendPreventionAlert();
+                preventionConfirmation.classList.remove('active');
+            }, 3000);
+        });
+        
+        // Cancel Prevention
+        cancelPrevention.addEventListener('click', () => {
+            clearTimeout(preventionTimeout);
+            preventionConfirmation.classList.remove('active');
+        });
+        
+        // Send Prevention Alert Function
+        function sendPreventionAlert() {
+            // Show prevention status bar
+            preventionStatusBar.classList.add('active');
+            preventionStatusText.textContent = 'Prevention Alert Sent - Notifying parents and authorities...';
+            
+            // Add prevention activity to feed
+            addPreventionActivity();
+            
+            // Simulate sending to contacts
+            setTimeout(() => {
+                preventionStatusText.textContent = 'Parents notified - Location shared';
+            }, 2000);
+            
+            setTimeout(() => {
+                preventionStatusText.textContent = 'Law authorities alerted - Prevention measures initiated';
+            }, 4000);
+            
+            // Hide status bar after 8 seconds
+            setTimeout(() => {
+                preventionStatusBar.classList.remove('active');
+                
+                // Update alert badge
+                alertCount = Math.max(0, alertCount - 1);
+                if (alertCount > 0) {
+                    alertBadge.textContent = alertCount;
+                } else {
+                    alertBadge.style.display = 'none';
+                }
+            }, 8000);
+        }
+        
+        // Add Quick Alert Activity to Feed
+        function addQuickAlertActivity() {
+            const activityList = document.getElementById('activityList');
+            const now = new Date();
+            const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item danger-alert';
+            newActivity.innerHTML = `
+                <div class="activity-icon danger">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Emergency Alert Sent</div>
+                    <div class="activity-time">${timeString}</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Location shared with all emergency contacts and authorities
+                    </div>
+                </div>
+            `;
+            
+            // Add to top of list
+            activityList.insertBefore(newActivity, activityList.firstChild);
+            
+            // Remove last item if list is too long
+            if (activityList.children.length > 5) {
+                activityList.removeChild(activityList.lastChild);
+            }
+            
+            // Update time stamps
+            const items = activityList.querySelectorAll('.activity-item');
+            items.forEach((item, index) => {
+                if (index > 0) {
+                    const timeElement = item.querySelector('.activity-time');
+                    if (index === 1) {
+                        timeElement.textContent = '1 minute ago';
+                    } else if (index === 2) {
+                        timeElement.textContent = '5 minutes ago';
+                    } else if (index === 3) {
+                        timeElement.textContent = '15 minutes ago';
+                    } else {
+                        timeElement.textContent = `${index * 15} minutes ago`;
+                    }
+                }
+            });
+        }
+        
+        // Add SOS Activity to Feed
+        function addSOSActivity() {
+            const activityList = document.getElementById('activityList');
+            const now = new Date();
+            const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item danger-alert';
+            newActivity.innerHTML = `
+                <div class="activity-icon danger">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">SOS Alert Sent</div>
+                    <div class="activity-time">${timeString}</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Location shared with all emergency contacts and authorities
+                    </div>
+                </div>
+            `;
+            
+            // Add to top of list
+            activityList.insertBefore(newActivity, activityList.firstChild);
+            
+            // Remove last item if list is too long
+            if (activityList.children.length > 5) {
+                activityList.removeChild(activityList.lastChild);
+            }
+            
+            // Update time stamps
+            const items = activityList.querySelectorAll('.activity-item');
+            items.forEach((item, index) => {
+                if (index > 0) {
+                    const timeElement = item.querySelector('.activity-time');
+                    if (index === 1) {
+                        timeElement.textContent = '1 minute ago';
+                    } else if (index === 2) {
+                        timeElement.textContent = '5 minutes ago';
+                    } else if (index === 3) {
+                        timeElement.textContent = '15 minutes ago';
+                    } else {
+                        timeElement.textContent = `${index * 15} minutes ago`;
+                    }
+                }
+            });
+        }
+        
+        // Add Prevention Activity to Feed
+        function addPreventionActivity() {
+            const activityList = document.getElementById('activityList');
+            const now = new Date();
+            const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item suspicious-activity';
+            newActivity.innerHTML = `
+                <div class="activity-icon warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Prevention Alert Sent</div>
+                    <div class="activity-time">${timeString}</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Location shared with parents and authorities for prevention
+                    </div>
+                </div>
+            `;
+            
+            // Add to top of list
+            activityList.insertBefore(newActivity, activityList.firstChild);
+            
+            // Remove last item if list is too long
+            if (activityList.children.length > 5) {
+                activityList.removeChild(activityList.lastChild);
+            }
+            
+            // Update time stamps
+            const items = activityList.querySelectorAll('.activity-item');
+            items.forEach((item, index) => {
+                if (index > 0) {
+                    const timeElement = item.querySelector('.activity-time');
+                    if (index === 1) {
+                        timeElement.textContent = '1 minute ago';
+                    } else if (index === 2) {
+                        timeElement.textContent = '5 minutes ago';
+                    } else if (index === 3) {
+                        timeElement.textContent = '15 minutes ago';
+                    } else {
+                        timeElement.textContent = `${index * 15} minutes ago`;
+                    }
+                }
+            });
+        }
+        
+        // Add new activity items
+        const activityTypes = [
+            { icon: 'fa-map-marker-alt', type: 'safe', title: 'Location Updated' },
+            { icon: 'fa-walking', type: 'safe', title: 'Normal Movement' },
+            { icon: 'fa-exclamation-triangle', type: 'warning', title: 'Unusual Activity' },
+            { icon: 'fa-home', type: 'safe', title: 'Home Zone' },
+            { icon: 'fa-school', type: 'safe', title: 'School Zone' },
+            { icon: 'fa-user-secret', type: 'warning', title: 'Suspicious Behavior' }
+        ];
+        
+        function addNewActivity() {
+            const randomActivity = activityTypes[Math.floor(Math.random() * activityTypes.length)];
+            const now = new Date();
+            const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            if (randomActivity.type === 'warning') {
+                newActivity.classList.add('suspicious-activity');
+            }
+            
+            newActivity.innerHTML = `
+                <div class="activity-icon ${randomActivity.type}">
+                    <i class="fas ${randomActivity.icon}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">${randomActivity.title}</div>
+                    <div class="activity-time">Just now</div>
+                </div>
+            `;
+            
+            // Add to top of list
+            const activityList = document.getElementById('activityList');
+            activityList.insertBefore(newActivity, activityList.firstChild);
+            
+            // Remove last item if list is too long
+            if (activityList.children.length > 5) {
+                activityList.removeChild(activityList.lastChild);
+            }
+            
+            // Update time stamps
+            const items = activityList.querySelectorAll('.activity-item');
+            items.forEach((item, index) => {
+                if (index > 0) {
+                    const timeElement = item.querySelector('.activity-time');
+                    if (index === 1) {
+                        timeElement.textContent = '1 minute ago';
+                    } else if (index === 2) {
+                        timeElement.textContent = '5 minutes ago';
+                    } else if (index === 3) {
+                        timeElement.textContent = '15 minutes ago';
+                    } else {
+                        timeElement.textContent = `${index * 15} minutes ago`;
+                    }
+                }
+            });
+        }
+        
+        // Add new activity every 10 seconds for demonstration
+        setInterval(addNewActivity, 10000);
+        
+        // Dismiss unusual activity banner
+        document.getElementById('dismissBanner').addEventListener('click', () => {
+            alertBanner.classList.remove('active');
+        });
+        
+        // Take action on unusual activity banner
+        document.getElementById('takeAction').addEventListener('click', () => {
+            alertBanner.classList.remove('active');
+            preventionConfirmation.classList.add('active');
+        });
+        
+        // Toggle switches functionality
+        const locationToggle = document.getElementById('locationToggle');
+        const movementToggle = document.getElementById('movementToggle');
+        const suspiciousToggle = document.getElementById('suspiciousToggle');
+        const authorityToggle = document.getElementById('authorityToggle');
+        
+        locationToggle.addEventListener('change', function() {
+            if (!this.checked) {
+                alert('Location tracking disabled. You will not receive location updates.');
+            }
+        });
+        
+        movementToggle.addEventListener('change', function() {
+            if (!this.checked) {
+                alert('Movement detection disabled. You will not receive movement-based alerts.');
+            }
+        });
+        
+        suspiciousToggle.addEventListener('change', function() {
+            if (!this.checked) {
+                alert('Suspicious activity detection disabled. You will not receive prevention alerts.');
+            }
+        });
+        
+        authorityToggle.addEventListener('change', function() {
+            if (!this.checked) {
+                alert('Auto-alert to authorities disabled. You will need to manually alert authorities in case of suspicious activities.');
+            } else {
+                alert('Auto-alert to authorities enabled. Law enforcement will be automatically notified of suspicious activities.');
+            }
+        });
+        
+        // Timeframe buttons
+        const timeframeBtns = document.querySelectorAll('.timeframe-btn');
+        timeframeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                timeframeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // In a real app, this would update the analytics data
+                const timeframe = btn.textContent;
+                console.log(`Analytics timeframe changed to: ${timeframe}`);
+            });
+        });
+        
+        // Add contact button
+        document.getElementById('addContactBtn').addEventListener('click', function() {
+            alert('Add new emergency contact feature would open here');
+        });
+        
+        // Contact action buttons
+        document.querySelectorAll('.contact-action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.textContent.trim();
+                const contactName = this.closest('.contact-card').querySelector('.contact-name').textContent;
+                alert(`${action} to ${contactName}`);
+            });
+        });
+    </script>
+</body>
+</html>
